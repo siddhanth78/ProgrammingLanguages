@@ -12,12 +12,14 @@ int main() {
     int range = high - low;
 
     int numThreads = 4;
-    std::thread* ths[numThreads];
+    std::thread* ths[4];
     for (int i = 0; i < numThreads; i++) {
-        int start = (n / numThreads) * i;
-        int stop = (n / numThreads) * (i + 1);
+        int start = low + (range / numThreads) * i; // what out for int division
+        int stop = low + (range / numThreads) * (i + 1);
+        if(i + 1 == 4)
+            stop = high;
 
-        std::thread* th = new std::thread(myRun, start, stop, count);
+        std::thread* th = new std::thread(myRun, start, stop, &count);
         ths[i] = th;
     }
 
