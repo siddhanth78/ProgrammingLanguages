@@ -12,7 +12,7 @@ int main() {
     int range = high - low;
 
     int numThreads = 4;
-    std::thread* ths[4];
+    std::thread* ths[numThreads];
     for (int i = 0; i < numThreads; i++) {
         int start = low + (range / numThreads) * i; // what out for int division
         int stop = low + (range / numThreads) * (i + 1);
@@ -29,12 +29,12 @@ int main() {
 }
 
 void myRun(int start, int stop, int* count) {
-    std::cout << "start: " << start << ", stop: " << stop;
+    std::cout << "start: " << start << ", stop: " << stop << "\n";
 
     for (int i = start; i < stop; i++) {
-        count += isPrime(i);
+        *count += isPrime(i);
     }
-    std::cout << "count: " << count;
+    std::cout << "count: " << *count << "\n";
 }
 
 int isPrime(int num) {
