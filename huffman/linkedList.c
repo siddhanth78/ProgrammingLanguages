@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h> // malloc
 #include "linkedList.h"
-#include "hcompress.h"
 
 LinkedList *llCreate()
 {
@@ -21,7 +20,7 @@ void llDisplay(LinkedList *ll)
 
     while (p != NULL)
     {
-        printf("value: %d, weight: %f", p->value->c, p->value->weight);
+        printf("value: %d, weight: %d", p->value->c, p->value->weight);
         p = p->next;
     }
     printf("]\n");
