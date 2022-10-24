@@ -59,14 +59,12 @@ void list_add_in_order(LinkedList** ll, struct tnode* newValue) {
 
     // Find the end of the list
     LinkedList *p = *ll;
-    LinkedList *pTrail;
-    if (p == NULL)
-    {                  // Add first element 
+    LinkedList *pTrail = p;
+    if (p == NULL) {                  // Add first element 
         *ll = newNode; // This is why we need ll to be a **
-    }
-    else
-    {
-        while (newValue->weight > p->value->weight && p->next != NULL)   
+    } else {
+        printf("newNode: %c, weight: %d\n", newNode->value->c, newNode->value->weight);
+        while (newValue->weight >= p->value->weight && p->next != NULL)   
         {
             pTrail = p;
             p = p->next;
@@ -76,7 +74,7 @@ void list_add_in_order(LinkedList** ll, struct tnode* newValue) {
             pTrail->next = newNode;
             newNode->next = p;
         } else { // Add node at end
-            pTrail->next = newNode;
+            p->next = newNode;
         } 
     }
 }

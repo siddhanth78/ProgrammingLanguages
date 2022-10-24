@@ -6,7 +6,7 @@ struct tnode {
     struct tnode* parent;
 };
 
-struct tnode* createFreqTable(char** file);
+struct tnode* createFreqTable(char* file);
 
 struct tnode* createHuffmanTree(struct tnode* leafNodes);
 
