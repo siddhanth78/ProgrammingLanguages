@@ -1,3 +1,4 @@
+
 struct tnode {
     int weight;
     int c;

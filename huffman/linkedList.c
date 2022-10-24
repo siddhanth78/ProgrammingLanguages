@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h> // malloc
+#include <assert.h>
 #include "linkedList.h"
 
 LinkedList *llCreate()
@@ -12,18 +13,13 @@ int llIsEmpty(LinkedList *ll)
     return (ll == NULL);
 }
 
-void llDisplay(LinkedList *ll)
+void llDisplay(LinkedList *p)
 {
-
-    LinkedList *p = ll;
-    printf("[");
-
-    while (p != NULL)
+    if (p)
     {
-        printf("value: %d, weight: %d", p->value->c, p->value->weight);
-        p = p->next;
+        printf("Node: %c, Weight: %d\n", p->value->c, p->value->weight);
+        llDisplay(p->next);
     }
-    printf("]\n");
 }
 
 void llAdd(LinkedList **ll, struct tnode* newValue)
@@ -59,33 +55,34 @@ void list_add_in_order(LinkedList** ll, struct tnode* newValue) {
 
     // Find the end of the list
     LinkedList *p = *ll;
-    LinkedList *pTrail = p;
-    if (p == NULL) {                  // Add first element 
-        *ll = newNode; // This is why we need ll to be a **
-    } else {
-        printf("newNode: %c, weight: %d\n", newNode->value->c, newNode->value->weight);
-        while (newValue->weight >= p->value->weight && p->next != NULL)   
-        {
-            pTrail = p;
-            p = p->next;
-        }
+    LinkedList *pTrail = NULL;
 
-        if(p->next != NULL) { // Add node in middle
-            pTrail->next = newNode;
-            newNode->next = p;
-        } else { // Add node at end
-            p->next = newNode;
-        } 
+    // find the insertion point
+    while (p && newValue->weight >= p->value->weight)   
+    {
+        pTrail = p;
+        p = p->next;
     }
+
+    // case insert before head
+    if (pTrail == NULL) {
+        *ll = newNode;
+        newNode->next = p;
+        return;
+    } 
+
+    // case insert node in middle or end
+    pTrail->next = newNode;
+    newNode->next = p;
 }
 
-void llFree(LinkedList *ll)
-{
-    LinkedList *p = ll;
-    while (p != NULL)
-    {
-        LinkedList *oldP = p;
-        p = p->next;
-        free(oldP);
-    }
+
+void llFree(LinkedList* ll) {
+  LinkedList* p = ll;
+  while (p != NULL) {
+    LinkedList* oldP = p;
+    p = p->next;
+    free(oldP);
+  }
+  
 }
