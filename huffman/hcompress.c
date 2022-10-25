@@ -21,9 +21,7 @@ int main(int argc, char *argv[]) {
     // Create the huffman tree from the frequency table
     struct tnode* treeRoot = createHuffmanTree(leafNodes);
 
-    //printf("root val: %c, root weight: %d\n", treeRoot->c, treeRoot->weight);
-    //printf("left val: %c, left weight: %d\n", treeRoot->left->c, treeRoot->left->weight);
-    //printf("right val: %c, right weight: %d\n", treeRoot->right->c, treeRoot->right->weight);
+    printTree(treeRoot, 0);
 
     // // encode
     // if (strcmp(argv[1], "-e") == 0) {
@@ -37,10 +35,37 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+// initializes tnode pointers to NULL
+struct tnode* new_tnode() {
+    struct tnode *n = malloc(sizeof(struct tnode));
+    n->weight= 0;
+    n->c     = 0;
+    n->left  = NULL;
+    n->right = NULL;
+    n->parent= NULL;
+    return n;
+}
+
+void printTree(struct tnode *n, int level)
+{
+        if (n == NULL) return;
+        
+        for (int i = 0; i < level; i++)
+            printf(i == level - 1 ? "- " : "  ");
+        
+        if (n->c !=0)
+            printf("%c (%d)\n", n->c, n->weight);
+        else
+            printf("%d\n", n->weight);
+
+        printTree(n->left, level + 1);
+        printTree(n->right, level + 1);
+}
+
+
 struct tnode* createFreqTable(char* file) {
 
     //struct tnode* leafs = (struct tnode*)malloc(128 * sizeof(struct tnode));
-    // ^^^ easier to view in the debugger when type array vs pointer
     static struct tnode leafs[128];
     
     int total = 0;
@@ -75,42 +100,28 @@ struct tnode* createHuffmanTree(struct tnode* leafNodes) {
 
     llDisplay(ll);
 
-    //printf("p: %c, weight: %d\n", p->value->c, p->value->weight);
-    //printf("p.next.c: %c p.next.weight %d\n", p->next->value->c, p->next->value->weight); SEGMENTATION FAULT
+    while(ll->next != NULL) {
+        
+        // create new_tnode
+        struct tnode *parent= new_tnode();
+        
+        // free and return children from linked list
+        struct tnode *left  = llPop(&ll);
+        struct tnode *right = llPop(&ll);
 
-    while(p->next != NULL) {
-        
-        p = ll;
-        
-        struct tnode *newNode = malloc(sizeof(struct tnode*));
-        
         // assign pointers
-        printf("p_c: %c, p_weight: %d\n", p->value->c, p->value->weight);
+        left->parent  = parent;
+        right->parent = parent;
 
-        newNode->left = p->value; // SEG FAULTING AT THIS LINE // 
-        // gets through loop once...
-        // then Segmentation Fault
-        //
-        // guess: either llFree() or list_add_in_order() missassign pointers
+        parent->left  = left;
+        parent->right = right;
 
-        newNode->right = p->next->value;
-        p->value->parent = newNode;
-        p->next->value->parent = newNode;
-
-        // assign weight to newNode
-        newNode->weight = p->value->weight + p->next->value->weight;
+        parent->weight = left->weight + right->weight;
         
-        // reassign p, add tnode into linkedList
-        list_add_in_order(&p, newNode);
-        
-        // free the combined nodes
-        //llFree(ll);
-        llFree(ll);
-        printf("free?\n");
+        // add tnode into linkedList
+        list_add_in_order(&ll, parent);
     }
-
-    printf("no seg fault?\n");
-    return p->value;
+    return ll->value;
 }
 
 void encodeFile(char* argv, struct tnode* leafNodes) {

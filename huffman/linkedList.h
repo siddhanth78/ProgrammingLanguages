@@ -9,6 +9,7 @@ LinkedList* llCreate();
 int llIsEmpty(LinkedList* ll);
 void llDisplay(LinkedList* ll);
 void llAdd(LinkedList** ll, struct tnode* newValue);
+struct tnode* llPop(LinkedList** ll);
 void llFree(LinkedList* ll);
 
 void list_add_in_order(LinkedList** ll, struct tnode* newValue);

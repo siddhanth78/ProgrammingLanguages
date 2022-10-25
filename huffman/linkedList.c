@@ -47,6 +47,20 @@ void llAdd(LinkedList **ll, struct tnode* newValue)
     }
 }
 
+struct tnode* llPop(LinkedList** ll)
+{
+    if (*ll == NULL)
+        return NULL;
+
+    LinkedList*p = *ll;
+    *ll = p->next;
+
+    struct tnode *n = p->value;
+    free(p);
+
+    return n;
+}
+
 void list_add_in_order(LinkedList** ll, struct tnode* newValue) {
     // Create the new node
     LinkedList *newNode = (LinkedList *)malloc(1 * sizeof(LinkedList));
